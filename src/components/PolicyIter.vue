@@ -8,10 +8,11 @@
                 <svg width="100%" height="100%" id="svg">
                     <g :transform="world_transform">
                         <g v-for="(row, row_idx) in world" :transform="transform(0, row_idx)" :key="row_idx">
-                            <g v-for="(col, col_idx) in row" :transform="transform(col_idx, 0)" :key="col_idx">
+                            <g v-for="(obj, col_idx) in row" :transform="transform(col_idx, 0)" :key="col_idx">
                                 <PolicyRect :line_width="line_width"
-                                            :obj_type="world[row_idx][col_idx].type"
-                                            :policy="world[row_idx][col_idx].policy" />
+                                            :obj_type="obj.type"
+                                            :policy="obj.policy"
+                                            :reward="obj.reward" />
                             </g>
                         </g>
                     </g>
@@ -75,8 +76,12 @@ export default {
                 })
             })
             let rand = random_util.getLocations(2, height, width)
-            this.world[rand[0][0]][rand[0][1]].type = OBJ_TYPE.ENEMY
-            this.world[rand[1][0]][rand[1][1]].type = OBJ_TYPE.GOAL
+            let enemy = this.world[rand[0][0]][rand[0][1]]
+            let goal  = this.world[rand[1][0]][rand[1][1]]
+            enemy.type = OBJ_TYPE.ENEMY
+            enemy.reward = -10
+            goal.type = OBJ_TYPE.GOAL
+            goal.reward = 5
         }
     }
 }
