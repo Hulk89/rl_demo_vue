@@ -1,7 +1,7 @@
 <template>
     <v-container fill-height>
         <v-layout column>
-            <v-flex xs1>
+            <v-flex xs2>
                 <h1>Policy Iteration</h1>
             </v-flex>
             <v-flex xs8>
@@ -16,6 +16,8 @@
                         </g>
                     </g>
                 </svg>
+            </v-flex>
+            <v-flex xs2>
             </v-flex>
         </v-layout>
     </v-container>
@@ -42,24 +44,7 @@ export default {
         let rect = svg.getBoundingClientRect()
         this.svg_size = [rect.width, rect.height] 
         
-        /* world initialization */
-        let width  = this.env_size[1]
-        let height = this.env_size[0]
-        this.world = Array(height).fill().map(() => {
-            return Array(width).fill().map( () => { 
-                return {type:    OBJ_TYPE.NONE,
-                        reward:  0,
-                        policy: {
-                            up: 0.25,
-                            down: 0.25,
-                            left: 0.25,
-                            right: 0.25
-                        }} 
-            })
-        })
-        let rand = random_util.getLocations(2, height, width)
-        this.world[rand[0][0]][rand[0][1]].type = OBJ_TYPE.ENEMY
-        this.world[rand[1][0]][rand[1][1]].type = OBJ_TYPE.GOAL
+        this.initialize_env()
     },
     computed: {
         world_transform: function() {
@@ -73,6 +58,26 @@ export default {
             return "translate(" + this.line_width * row_idx + ', '
                 + this.line_width * col_idx + ")"
         },
+        initialize_env: function() {
+            /* world initialization */
+            let width  = this.env_size[1]
+            let height = this.env_size[0]
+            this.world = Array(height).fill().map(() => {
+                return Array(width).fill().map( () => { 
+                    return {type:    OBJ_TYPE.NONE,
+                            reward:  0,
+                            policy: {
+                                up: 0.25,
+                                down: 0.25,
+                                left: 0.25,
+                                right: 0.25
+                            }} 
+                })
+            })
+            let rand = random_util.getLocations(2, height, width)
+            this.world[rand[0][0]][rand[0][1]].type = OBJ_TYPE.ENEMY
+            this.world[rand[1][0]][rand[1][1]].type = OBJ_TYPE.GOAL
+        }
     }
 }
 
