@@ -2,7 +2,7 @@
     <v-container fill-height>
         <v-layout column>
             <v-flex xs1>
-                <h1> Policy Iteration</h1>
+                <h1>Policy Iteration</h1>
             </v-flex>
             <v-flex xs8>
                 <svg width="100%" height="100%" id="svg">
@@ -23,16 +23,18 @@
 
 <script>
 import { OBJ_TYPE } from '../constant.js'
-import PolicyRect from './PolicyRect.vue'
+import random_util from '../utils/random.js'
+import PolicyRect from './PolicyRect'
 
 export default {
     data: () => ({
-        world :     [[{type: OBJ_TYPE.NONE}]],
+        world :     [[{type: OBJ_TYPE.NONE, reward: 0, policy: {up: 0, down: 0, left: 0, right: 0}}]],
         svg_size:   [0, 0],
         line_width: 30,
         env_size:   [4, 4]
     }),
     components: {
+        /* eslint-disable vue/no-unused-components */
         PolicyRect
     },
     mounted: function () {
@@ -40,8 +42,11 @@ export default {
         let rect = svg.getBoundingClientRect()
         this.svg_size = [rect.width, rect.height] 
         
-        this.world = Array(this.env_size[0]).fill().map(() => {
-            return Array(this.env_size[1]).fill().map( () => { 
+        /* world initialization */
+        let width  = this.env_size[1]
+        let height = this.env_size[0]
+        this.world = Array(height).fill().map(() => {
+            return Array(width).fill().map( () => { 
                 return {type:    OBJ_TYPE.NONE,
                         reward:  0,
                         policy: {
@@ -52,6 +57,9 @@ export default {
                         }} 
             })
         })
+        let rand = random_util.getLocations(2, height, width)
+        this.world[rand[0][0]][rand[0][1]].type = OBJ_TYPE.ENEMY
+        this.world[rand[1][0]][rand[1][1]].type = OBJ_TYPE.GOAL
     },
     computed: {
         world_transform: function() {

@@ -10,6 +10,7 @@
               :y2="(line_width/2) * (1-policy.up)"
               stroke="black"
               stroke-width="2"
+              v-if="policy_enable"
               />
         <line :x1="line_width/2"
               :y1="line_width/2"
@@ -17,6 +18,7 @@
               :y2="(line_width/2) * (1+policy.down)"
               stroke="black"
               stroke-width="2"
+              v-if="policy_enable"
               />
         <line :x1="line_width/2"
               :y1="line_width/2"
@@ -24,6 +26,7 @@
               :y2="line_width/2"
               stroke="black"
               stroke-width="2"
+              v-if="policy_enable"
               />
         <line :x1="line_width/2"
               :y1="line_width/2"
@@ -31,6 +34,7 @@
               :y2="line_width/2"
               stroke="black"
               stroke-width="2"
+              v-if="policy_enable"
               />
     </g>
 </template>
@@ -41,7 +45,7 @@ import { OBJ_TYPE } from '../constant.js'
 export default {
     props: ['line_width', 'obj_type', 'policy'],
     computed: {
-        obj_class() {
+        obj_class: function () {
             let obj_classes = ['box']
             switch (this.obj_type) {
                 case OBJ_TYPE.NONE:
@@ -59,6 +63,16 @@ export default {
             }
             return obj_classes
         },
+        policy_enable: function () {
+            switch (this.obj_type) {
+                case OBJ_TYPE.NONE:
+                case OBJ_TYPE.ME:
+                    return true
+                case OBJ_TYPE.ENEMY:
+                case OBJ_TYPE.GOAL:
+                    return false
+            }
+        }
     }
 }
 </script>
