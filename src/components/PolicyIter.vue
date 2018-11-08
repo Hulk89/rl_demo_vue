@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { OBJ_TYPE } from '../constant.js'
+import { OBJ_TYPE } from '../utils/constants.js'
 import random_util from '../utils/random.js'
 import PolicyRect from './PolicyRect'
 

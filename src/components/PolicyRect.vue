@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { OBJ_TYPE } from '../constant.js'
+import { OBJ_TYPE } from '../utils/constants.js'
 
 export default {
     props: ['line_width', 'obj_type', 'policy', 'reward'],
