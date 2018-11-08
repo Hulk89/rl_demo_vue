@@ -4,6 +4,8 @@
               :height="line_width-1"
               :class="obj_class"
               />
+        <text :x="3" 
+              :y="line_width-3" fill="black">{{ reward }} </text>
         <line :x1="line_width/2"
               :y1="line_width/2"
               :x2="line_width/2"
@@ -40,10 +42,10 @@
 </template>
 
 <script>
-import { OBJ_TYPE } from '../constant.js'
+import { OBJ_TYPE } from '../utils/constants.js'
 
 export default {
-    props: ['line_width', 'obj_type', 'policy'],
+    props: ['line_width', 'obj_type', 'policy', 'reward'],
     computed: {
         obj_class: function () {
             let obj_classes = ['box']
