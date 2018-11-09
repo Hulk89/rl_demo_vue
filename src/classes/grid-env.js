@@ -115,6 +115,4 @@ class GridWorld {
     }
 }
 
-export default {
-    GridWorld
-}
+export default GridWorld

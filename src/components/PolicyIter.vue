@@ -46,16 +46,16 @@
 <script>
 import GridworldView from './GridworldView.vue'
 
-import env from '../classes/grid-env.js' 
-import agent from '../classes/policy_iteration.js'
+import GridWorld from '../classes/grid-env.js' 
+import PolicyIteration from '../classes/policy_iteration.js'
 
 export default {
     data: () => ({
         svg_size:   [0, 0],
         line_width: 50,
         env_size:   [4, 4],
-        env: new env.GridWorld(4, 4),
-        agent: new agent.PolicyIteration(4, 4, 0.9),
+        env: new GridWorld(4, 4),
+        agent: new PolicyIteration(4, 4, 0.9),
         selected:  make_selected(4, 4),
         decay: 0.9,
         step_enabled: true,
@@ -66,8 +66,8 @@ export default {
         GridworldView
     },
     mounted: function () {
-        //this.env = new env.GridWorld(this.env_size[0], this.env_size[1])
-        //this.agent = new agent.PolicyIteration(this.env_size[0], this.env_size[1])
+        //this.env = new GridWorld(this.env_size[0], this.env_size[1])
+        //this.agent = new PolicyIteration(this.env_size[0], this.env_size[1])
     },
     watch: {
         selected_idx: function () {

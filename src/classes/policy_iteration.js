@@ -1,5 +1,5 @@
 
-class PolicyIteration {
+export default class PolicyIteration {
     constructor(height, width, decay) {
         this.row = height
         this.col = width
@@ -104,9 +104,4 @@ class PolicyIteration {
         })
     }
 }
-
-export default {
-    PolicyIteration
-}
-
 
