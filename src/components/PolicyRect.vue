@@ -45,23 +45,32 @@
 import { OBJ_TYPE } from '../utils/constants.js'
 
 export default {
-    props: ['line_width', 'obj_type', 'policy', 'reward'],
+    props: ['line_width', 
+            'obj_type', 
+            'policy', 
+            'reward',
+            'selected'],
     computed: {
         obj_class: function () {
             let obj_classes = ['box']
-            switch (this.obj_type) {
-                case OBJ_TYPE.NONE:
-                    obj_classes.push("none")
-                    break
-                case OBJ_TYPE.ENEMY:
-                    obj_classes.push("enemy")
-                    break
-                case OBJ_TYPE.GOAL:
-                    obj_classes.push("goal")
-                    break
-                case OBJ_TYPE.ME:
-                    obj_classes.push("char")
-                    break
+            if (this.selected) {
+                obj_classes.push('selected')
+            }
+            else {
+                switch (this.obj_type) {
+                    case OBJ_TYPE.NONE:
+                        obj_classes.push("none")
+                        break
+                    case OBJ_TYPE.ENEMY:
+                        obj_classes.push("enemy")
+                        break
+                    case OBJ_TYPE.GOAL:
+                        obj_classes.push("goal")
+                        break
+                    case OBJ_TYPE.ME:
+                        obj_classes.push("char")
+                        break
+                }
             }
             return obj_classes
         },
@@ -81,6 +90,9 @@ export default {
 
 <style>
 
+.selected {
+    fill: rgb(255, 255, 0);
+}
 .box {
     stroke-width: 3;
     stroke: rgb(0,0,0);

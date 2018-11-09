@@ -24,7 +24,10 @@ import GridworldView from './GridworldView.vue'
 
 export default {
     data: () => ({
-        world :     [[{type: OBJ_TYPE.NONE, reward: 0, policy: {up: 0, down: 0, left: 0, right: 0}}]],
+        world :     [[{type:   OBJ_TYPE.NONE, 
+                       reward: 0,
+                       policy: {up: 0, down: 0, left: 0, right: 0},
+                       selected: false}]],
         svg_size:   [0, 0],
         line_width: 30,
         env_size:   [4, 4]
@@ -61,7 +64,8 @@ export default {
                                 down: 0.25,
                                 left: 0.25,
                                 right: 0.25
-                            }} 
+                            },
+                            selected: false} 
                 })
             })
             let rand = random_util.getLocations(2, height, width)

@@ -4,9 +4,10 @@
             <g v-for="(row, row_idx) in world" :transform="transform(0, row_idx)" :key="row_idx">
                 <g v-for="(obj, col_idx) in row" :transform="transform(col_idx, 0)" :key="col_idx">
                     <PolicyRect :line_width="line_width"
-                    :obj_type="obj.type"
-                    :policy="obj.policy"
-                    :reward="obj.reward" />
+                                :obj_type="obj.type"
+                                :policy="obj.policy"
+                                :reward="obj.reward"
+                                :selected="obj.selected" />
                 </g>
             </g>
         </g>
@@ -14,8 +15,6 @@
 </template>
 
 <script>
-import { OBJ_TYPE } from '../utils/constants.js'
-import random_util from '../utils/random.js'
 import PolicyRect from './PolicyRect'
 
 export default {
