@@ -5,18 +5,11 @@
                 <h1>Policy Iteration</h1>
             </v-flex>
             <v-flex xs8>
-                <svg width="100%" height="100%" id="svg">
-                    <g :transform="world_transform">
-                        <g v-for="(row, row_idx) in world" :transform="transform(0, row_idx)" :key="row_idx">
-                            <g v-for="(obj, col_idx) in row" :transform="transform(col_idx, 0)" :key="col_idx">
-                                <PolicyRect :line_width="line_width"
-                                            :obj_type="obj.type"
-                                            :policy="obj.policy"
-                                            :reward="obj.reward" />
-                            </g>
-                        </g>
-                    </g>
-                </svg>
+                <GridworldView 
+                    :world="world"
+                    :line_width="line_width"
+                    :env_size="env_size"
+                    />
             </v-flex>
             <v-flex xs2>
             </v-flex>
@@ -27,7 +20,7 @@
 <script>
 import { OBJ_TYPE } from '../utils/constants.js'
 import random_util from '../utils/random.js'
-import PolicyRect from './PolicyRect'
+import GridworldView from './GridworldView.vue'
 
 export default {
     data: () => ({
@@ -38,13 +31,9 @@ export default {
     }),
     components: {
         /* eslint-disable vue/no-unused-components */
-        PolicyRect
+        GridworldView
     },
     mounted: function () {
-        let svg = document.getElementById("svg")
-        let rect = svg.getBoundingClientRect()
-        this.svg_size = [rect.width, rect.height] 
-        
         this.initialize_env()
     },
     computed: {
