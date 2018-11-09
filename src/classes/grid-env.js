@@ -32,7 +32,13 @@ class GridWorld {
         me.type      = OBJ_TYPE.ME
         return world
     }
-
+    
+    set size(size) {
+        this.row = size[0]
+        this.col = size[1]
+        this.initialize()
+    }
+    
     get_reward(row, col) {
         return this.world[row][col].reward
     }

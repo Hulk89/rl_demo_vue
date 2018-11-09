@@ -8,7 +8,6 @@
                 <GridworldView 
                     :world="world"
                     :line_width="line_width"
-                    :env_size="env_size"
                     @calculate-value="calculate_value"
                     />
             </v-flex>
@@ -21,6 +20,13 @@
                         <h3 v-else>
                             grid를 클릭하면 다음 value function 수식이 나옵니다.
                         </h3>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-layout>
+                            <v-flex xs12>
+                                <v-text-field label="decay" v-model="decay"/>
+                            </v-flex>
+                        </v-layout>
                     </v-flex>
                     <v-flex xs3>
                         <v-btn @click="evaluate_step"
@@ -53,7 +59,7 @@ export default {
     data: () => ({
         svg_size:   [0, 0],
         line_width: 50,
-        env_size:   [4, 4],
+        env_size: {row:4, col:4},
         env: new GridWorld(4, 4),
         agent: new PolicyIteration(4, 4, 0.9),
         selected:  make_selected(4, 4),
@@ -65,23 +71,23 @@ export default {
         /* eslint-disable vue/no-unused-components */
         GridworldView
     },
-    mounted: function () {
-        //this.env = new GridWorld(this.env_size[0], this.env_size[1])
-        //this.agent = new PolicyIteration(this.env_size[0], this.env_size[1])
-    },
     watch: {
         selected_idx: function () {
-            this.selected = make_selected(this.env_size[0], this.env_size[1])
+            this.selected = make_selected(this.env_size.row, this.env_size.col)
             let row_i = this.selected_idx.row
             let col_i = this.selected_idx.col
             if (row_i != -1)
                 this.selected[row_i].splice(col_i, 1, true)
+        },
+        decay: function () {
+            this.agent.decay = this.decay
         }
     },
     computed: {
         world: function() {
-            return Array(this.env_size[0]).fill().map( (row, row_i) => {
-                return Array(this.env_size[1]).fill().map( (item, col_i) => {
+            console.log("world changed")
+            return Array(this.env_size.row).fill().map( (row, row_i) => {
+                return Array(this.env_size.col).fill().map( (item, col_i) => {
                     let decision = this.agent.decisions[row_i][col_i]
                     let env = this.env.world[row_i][col_i]
                     let selected = this.selected[row_i][col_i]
@@ -127,6 +133,8 @@ export default {
                 + this.line_width * col_idx + ")"
         },
         evaluate_step: function() {
+            console.log(this.agent)
+            console.log(this.env)
             this.agent.update_values(this.env)
         },
         improvement_step: function() {

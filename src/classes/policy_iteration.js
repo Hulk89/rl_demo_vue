@@ -22,6 +22,13 @@ export default class PolicyIteration {
         return decisions
     }
 
+    set size(size) {
+        this.row = size[0]
+        this.col = size[1]
+
+        this.initialize()
+    }
+
     calculate_new_value(row_i, col_i, env) {
         if (env.is_end_state(row_i, col_i)) {
             return 0
