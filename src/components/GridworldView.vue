@@ -8,7 +8,8 @@
                                 :policy="obj.policy"
                                 :reward="obj.reward"
                                 :value="obj.value"
-                                :selected="obj.selected" />
+                                :selected="obj.selected"
+                                @click.native="clicked(row_idx, col_idx)"/>
                 </g>
             </g>
         </g>
@@ -44,6 +45,9 @@ export default {
             return "translate(" + this.line_width * row_idx + ', '
                 + this.line_width * col_idx + ")"
         },
+        clicked: function(row_idx, col_idx) {
+            this.$emit('calculate-value', {row: row_idx, col: col_idx})
+        }
     }
 }
 
