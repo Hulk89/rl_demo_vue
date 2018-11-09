@@ -5,10 +5,13 @@ class GridWorld {
     constructor(height, width) {
         this.row = height
         this.col = width
-        this.world = this.initialize()
+        this.world = this.initialize_world()
+        this.is_done = false
     }
-
-    initialize() {
+    reinitialize() {
+        this.world = this.initialize_world()
+    }
+    initialize_world() {
         let world = Array(this.row).fill().map(() => {
             return Array(this.col).fill().map( () => { 
                 return {type:    OBJ_TYPE.NONE,
@@ -60,6 +63,47 @@ class GridWorld {
             return true
         })
         return real_neighbors
+    }
+
+    get_me() {
+        let idx = [-1, -1]
+        this.world.forEach( (row, row_i) => {
+            row.forEach( (item, col_i) => {
+                if (item.type == OBJ_TYPE.ME) {
+                    idx = [row_i, col_i]
+                }
+            })
+        })
+        return idx
+    }
+
+    get_next_state(row_i, col_i, action) {
+        let neighbors = this.get_neighbors(row_i, col_i)
+        let idx = [0, 0]
+        let available_action = neighbors.some( (n) => {
+            if (n.dir == action) {
+                idx = n.idx
+                return true
+            }
+            return false
+        })
+        if (!available_action) {
+            return [row_i, col_i]
+        }
+        else{
+            return idx
+        }
+    }
+    set_next_state(action) {
+        let curr_me = this.get_me()
+        let next_state = this.get_next_state(curr_me[0], curr_me[1], action)
+
+        this.is_done = this.is_end_state(next_state[0], next_state[1])
+        this.world[curr_me[0]][curr_me[1]].type = OBJ_TYPE.NONE
+        this.world[next_state[0]][next_state[1]].type = OBJ_TYPE.ME
+
+        let reward = this.get_reward(next_state[0], next_state[1])
+        return {reward: reward, done: this.is_done}
     }
 }
 

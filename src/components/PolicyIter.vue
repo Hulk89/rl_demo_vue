@@ -13,9 +13,13 @@
             </v-flex>
             <v-flex xs2>
                 <v-layout>
-                    <v-btn @click="evaluate_step">next eval</v-btn>
-                    <v-btn @click="improvement_step">next improve</v-btn>
-                    <v-btn @click="start">start policy</v-btn>
+                    <v-btn @click="evaluate_step"
+                           :disabled="!step_enabled">next eval</v-btn>
+                    <v-btn @click="improvement_step"
+                           :disabled="!step_enabled">next improve</v-btn>
+                    <v-btn @click="step"
+                           :disabled="!step_enabled">step</v-btn>
+                    <v-btn @click="restart">restart</v-btn>
                 </v-layout>
             </v-flex>
         </v-layout>
@@ -40,8 +44,8 @@ export default {
             return Array(4).fill().map( () => {
                 return {value: false}
             })
-        })
-
+        }),
+        step_enabled: true
     }),
     components: {
         /* eslint-disable vue/no-unused-components */
@@ -90,41 +94,21 @@ export default {
         improvement_step: function() {
             this.agent.improve_policy(this.env)
         },
-        start: function() {
-
-        },
-        get_new_value: function(row_i, col_i) {
-            let curr_grid = this.world[row_i][col_i]
-
-            switch (curr_grid.type) {
-                case OBJ_TYPE.ENEMY:
-                case OBJ_TYPE.GOAL:
-                    return 0
+        step: function() {
+            let done = false
+            let action = this.agent.get_action(this.env)
+            let result = this.env.set_next_state(action)
+            if (result.done) {
+                this.step_enabled=false
             }
-
-            let value = 0
-            let neighbors = this.get_neighbors(row_i, col_i)
-            neighbors.forEach((n) => {
-                let next_state = this.world[n.idx[0]][n.idx[1]]
-                value += curr_grid.policy[n.dir] * (next_state.reward + this.decay * next_state.value)
-            })
-            return value.toFixed(2)
+                
         },
-        get_neighbors: function(row_i, col_i) {
-            let neighbors = [{dir:'left',  idx: [row_i, col_i-1]},
-                             {dir:'up',    idx: [row_i-1, col_i]},
-                             {dir:'right', idx:[row_i, col_i+1]},
-                             {dir:'down',  idx: [row_i+1, col_i]}]
-
-            let real_neighbors = neighbors.filter(n => {
-                if (n.idx[0] < 0 || n.idx[0] >= this.env_size[0])
-                    return false
-                if (n.idx[1] < 0 || n.idx[1] >= this.env_size[1])
-                    return false
-                return true
-            })
-            return real_neighbors
+        restart: function() {
+            this.env.reinitialize()
+            this.agent.reinitialize()
+            this.step_enabled=true
         }
+        
     }
 }
 

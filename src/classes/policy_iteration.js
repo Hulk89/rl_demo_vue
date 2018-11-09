@@ -5,10 +5,14 @@ class PolicyIteration {
         this.col = width
         this.decay = 0.9
 
-        this.decisions = this.initialize()
+        this.decisions = this.initialize_decisions()
     }
 
-    initialize() {
+    reinitialize() {
+        this.decisions = this.initialize_decisions()
+    }
+
+    initialize_decisions() {
         let decisions = Array(this.row).fill().map(() => {
             return Array(this.col).fill().map( () => { 
                 return { value: 0,
@@ -61,6 +65,19 @@ class PolicyIteration {
     get_value(row_i, col_i) {
         return this.decisions[row_i][col_i].value
     }
+
+    get_action(env) {
+        let [row_i, col_i] = env.get_me()
+        let policy = this.decisions[row_i][col_i].policy
+        let max_policy = []
+        for (var dir in policy) {
+            if (policy[dir] > 0)
+                max_policy.push(dir)
+        }
+        var action = max_policy[Math.floor(Math.random() * max_policy.length)];
+        return action
+    }
+
     improve_policy(env) {
         this.decisions.forEach( (row, row_i) => {
             row.forEach( (curr_decision, col_i) => {
