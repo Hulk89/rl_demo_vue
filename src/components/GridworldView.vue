@@ -7,6 +7,7 @@
                                 :obj_type="obj.type"
                                 :policy="obj.policy"
                                 :reward="obj.reward"
+                                :value="obj.value"
                                 :selected="obj.selected" />
                 </g>
             </g>

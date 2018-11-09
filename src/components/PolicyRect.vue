@@ -5,7 +5,9 @@
               :class="obj_class"
               />
         <text :x="3" 
-              :y="line_width-3" fill="black">{{ reward }} </text>
+              :y="15" fill="black">v: {{ value }} </text>
+        <text :x="3" 
+              :y="line_width-5" fill="black">R: {{ reward }} </text>
         <line :x1="line_width/2"
               :y1="line_width/2"
               :x2="line_width/2"
@@ -49,6 +51,7 @@ export default {
             'obj_type', 
             'policy', 
             'reward',
+            'value',
             'selected'],
     computed: {
         obj_class: function () {
