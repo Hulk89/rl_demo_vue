@@ -113,12 +113,12 @@ export default {
                 let reward = this.env.get_reward(n.idx[0], n.idx[1])
                 let val = this.agent.get_value(n.idx[0], n.idx[1])
                 let prob = this.agent.decisions[row_i][col_i].policy[n.dir]
-                values.push("{"+ n.dir + "}" + prob + '*' + '(' + reward + ' + ' + this.decay + ' * ' + val + ')')
+                values.push("{"+ n.dir + "}" + prob.toFixed(2) + '*' + '(' + reward.toFixed(2) 
+                                             + ' + ' + this.decay + ' * ' + parseFloat(val).toFixed(2) + ')')
 
-                sum += prob * (reward + this.decay * parseFloat(val, 2))
+                sum += prob * (reward + this.decay * val)
             })
-            sum = parseFloat(sum, 2)
-            return {eq: values.join(' + '), total: sum}
+            return {eq: values.join(' + '), total: sum.toFixed(2)}
         }
     },
     methods: {
