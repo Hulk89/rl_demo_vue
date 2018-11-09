@@ -4,7 +4,7 @@
             <v-flex xs1 text-xs-center>
                 <h1>Policy Iteration</h1>
             </v-flex>
-            <v-flex xs8>
+            <v-flex xs8 text-xs-center>
                 <GridworldView 
                     :world="world"
                     :line_width="line_width"
