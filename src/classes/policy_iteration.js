@@ -1,4 +1,4 @@
-
+import { DIRECTION } from '../utils/constants.js'
 export default class PolicyIteration {
     constructor(height, width, decay) {
         this.row = height
@@ -15,10 +15,8 @@ export default class PolicyIteration {
         let decisions = Array(this.row).fill().map(() => {
             return Array(this.col).fill().map( () => { 
                 return { value: 0,
-                         policy: { up: 0.25,
-                                   down: 0.25,
-                                   left: 0.25,
-                                   right: 0.25 } }
+                         policy: [0.25, 0.25, 0.25, 0.25]  //UP DOWN LEFT RIGHT
+                        }
             })
         })
         return decisions
@@ -68,12 +66,20 @@ export default class PolicyIteration {
     get_action(env) {
         let [row_i, col_i] = env.get_state()
         let policy = this.decisions[row_i][col_i].policy
-        let max_policy = []
-        for (var dir in policy) {
-            if (policy[dir] > 0)
-                max_policy.push(dir)
-        }
-        var action = max_policy[Math.floor(Math.random() * max_policy.length)];
+        let cdf = []
+        policy.reduce( (prev, curr, i) => cdf[i] = prev + curr, 0)
+
+        let rand = Math.random()
+
+        let action = 0
+
+        cdf.some( (prob, i) => {
+            if (prob >= rand) {
+                action = i
+                return true
+            }
+            return false
+        })
         return action
     }
 
@@ -82,7 +88,7 @@ export default class PolicyIteration {
             row.forEach( (curr_decision, col_i) => {
                 let neighbors = env.get_neighbors(row_i, col_i)
 
-                let max_return = {val: -1000, dirs:['up']}
+                let max_return = {val: -1000, dirs:[DIRECTION.UP]}
                 neighbors.forEach((n) => {
                     let n_state_reward = env.get_reward(n.idx[0], n.idx[1])
                     let n_state_value = this.get_value(n.idx[0], n.idx[1])
@@ -96,7 +102,7 @@ export default class PolicyIteration {
                     }
                 })
 
-                curr_decision.policy = {up:0, down:0, left:0, right:0}
+                curr_decision.policy = [0, 0, 0, 0]
                 max_return.dirs.forEach( (dir) => {
                     curr_decision.policy[dir] = 1/max_return.dirs.length
                 })
@@ -104,4 +110,3 @@ export default class PolicyIteration {
         })
     }
 }
-

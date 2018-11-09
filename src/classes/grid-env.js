@@ -1,4 +1,4 @@
-import { OBJ_TYPE } from '../utils/constants.js'
+import { OBJ_TYPE, DIRECTION } from '../utils/constants.js'
 import random_util from '../utils/random.js'
 
 class GridWorld {
@@ -53,10 +53,10 @@ class GridWorld {
     }
 
     get_neighbors(row_i, col_i) {
-        let neighbors = [{dir:'left',  idx: [row_i, col_i-1]},
-                         {dir:'up',    idx: [row_i-1, col_i]},
-                         {dir:'right', idx:[row_i, col_i+1]},
-                         {dir:'down',  idx: [row_i+1, col_i]}]
+        let neighbors = [{dir:DIRECTION.LEFT,  idx: [row_i, col_i-1]},
+                         {dir:DIRECTION.UP,    idx: [row_i-1, col_i]},
+                         {dir:DIRECTION.RIGHT, idx:[row_i, col_i+1]},
+                         {dir:DIRECTION.DOWN,  idx: [row_i+1, col_i]}]
         let real_neighbors = neighbors.filter(n => {
             if (n.idx[0] < 0 || n.idx[0] >= this.row)
                 return false

@@ -45,7 +45,7 @@
 
 <script>
 import GridworldView from './GridworldView.vue'
-
+import { dir_to_str } from '../utils/constants.js'
 import GridWorld from '../classes/grid-env.js' 
 import PolicyIteration from '../classes/policy_iteration.js'
 
@@ -75,7 +75,7 @@ export default {
             let row_i = this.selected_idx.row
             let col_i = this.selected_idx.col
             if (row_i != -1)
-                this.selected[row_i][col_i].value = true
+                this.selected[row_i].splice(col_i, 1, true)
         }
     },
     computed: {
@@ -89,7 +89,7 @@ export default {
                             policy:   decision.policy,
                             reward:   env.reward,
                             type:     env.type,
-                            selected: selected.value}
+                            selected: selected}
                 })
             })
         },
@@ -113,7 +113,7 @@ export default {
                 let reward = this.env.get_reward(n.idx[0], n.idx[1])
                 let val = this.agent.get_value(n.idx[0], n.idx[1])
                 let prob = this.agent.decisions[row_i][col_i].policy[n.dir]
-                values.push("{"+ n.dir + "}" + prob.toFixed(2) + '*' + '(' + reward.toFixed(2) 
+                values.push("{"+ dir_to_str(n.dir) + "}" + prob.toFixed(2) + '*' + '(' + reward.toFixed(2) 
                                              + ' + ' + this.decay + ' * ' + parseFloat(val).toFixed(2) + ')')
 
                 sum += prob * (reward + this.decay * val)
@@ -150,13 +150,21 @@ export default {
         calculate_value: function(index) {
             if (!this.env.is_end_state(index.row, index.col))
                 this.selected_idx = index
+        },
+        reset_selected() {
+            this.selected.forEach( (row) => {
+                row.forEach( (item, i) => {
+                    row.splice(i, 1, false)
+                })
+            })
         }
     }
 }
+
 function make_selected(row, col) {
     return Array(row).fill().map( () => {
             return Array(col).fill().map( () => {
-                return {value: false}
+                return false
             })
         })
 }

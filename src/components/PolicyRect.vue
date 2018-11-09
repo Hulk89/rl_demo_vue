@@ -11,7 +11,7 @@
         <line :x1="line_width/2"
               :y1="line_width/2"
               :x2="line_width/2"
-              :y2="(line_width/2) * (1-policy.up)"
+              :y2="(line_width/2) * (1-policy_dict.up)"
               stroke="black"
               stroke-width="2"
               v-if="policy_enable"
@@ -19,14 +19,14 @@
         <line :x1="line_width/2"
               :y1="line_width/2"
               :x2="line_width/2"
-              :y2="(line_width/2) * (1+policy.down)"
+              :y2="(line_width/2) * (1+policy_dict.down)"
               stroke="black"
               stroke-width="2"
               v-if="policy_enable"
               />
         <line :x1="line_width/2"
               :y1="line_width/2"
-              :x2="(line_width/2) * (1-policy.left)"
+              :x2="(line_width/2) * (1-policy_dict.left)"
               :y2="line_width/2"
               stroke="black"
               stroke-width="2"
@@ -34,7 +34,7 @@
               />
         <line :x1="line_width/2"
               :y1="line_width/2"
-              :x2="(line_width/2) * (1+policy.right)"
+              :x2="(line_width/2) * (1+policy_dict.right)"
               :y2="line_width/2"
               stroke="black"
               stroke-width="2"
@@ -44,8 +44,7 @@
 </template>
 
 <script>
-import { OBJ_TYPE } from '../utils/constants.js'
-
+import { OBJ_TYPE, DIRECTION } from '../utils/constants.js'
 export default {
     props: ['line_width', 
             'obj_type', 
@@ -86,6 +85,12 @@ export default {
                 case OBJ_TYPE.GOAL:
                     return false
             }
+        },
+        policy_dict: function () {
+            return {up:    this.policy[DIRECTION.UP], 
+                    down:  this.policy[DIRECTION.DOWN], 
+                    left:  this.policy[DIRECTION.LEFT], 
+                    right: this.policy[DIRECTION.RIGHT]} 
         }
     }
 }
