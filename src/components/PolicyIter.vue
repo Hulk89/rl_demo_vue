@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import { OBJ_TYPE } from '../utils/constants.js'
 import GridworldView from './GridworldView.vue'
 
 import env from '../classes/grid-env.js' 
@@ -95,7 +94,6 @@ export default {
             this.agent.improve_policy(this.env)
         },
         step: function() {
-            let done = false
             let action = this.agent.get_action(this.env)
             let result = this.env.set_next_state(action)
             if (result.done) {
