@@ -5,11 +5,12 @@ class GridWorld {
     constructor(height, width) {
         this.row = height
         this.col = width
+        this.initialize()
+    }
+
+    initialize() {
         this.world = this.initialize_world()
         this.is_done = false
-    }
-    reinitialize() {
-        this.world = this.initialize_world()
     }
     initialize_world() {
         let world = Array(this.row).fill().map(() => {

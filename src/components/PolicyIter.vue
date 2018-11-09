@@ -102,8 +102,8 @@ export default {
                 
         },
         restart: function() {
-            this.env.reinitialize()
-            this.agent.reinitialize()
+            this.env.initialize()
+            this.agent.initialize()
             this.step_enabled=true
         }
         

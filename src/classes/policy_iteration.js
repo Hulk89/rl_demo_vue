@@ -4,11 +4,10 @@ class PolicyIteration {
         this.row = height
         this.col = width
         this.decay = 0.9
-
-        this.decisions = this.initialize_decisions()
+        this.initialize()
     }
 
-    reinitialize() {
+    initialize() {
         this.decisions = this.initialize_decisions()
     }
 
