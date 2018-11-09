@@ -1,9 +1,9 @@
 
 class PolicyIteration {
-    constructor(height, width) {
+    constructor(height, width, decay) {
         this.row = height
         this.col = width
-        this.decay = 0.9
+        this.decay = decay
         this.initialize()
     }
 
@@ -66,7 +66,7 @@ class PolicyIteration {
     }
 
     get_action(env) {
-        let [row_i, col_i] = env.get_me()
+        let [row_i, col_i] = env.get_state()
         let policy = this.decisions[row_i][col_i].policy
         let max_policy = []
         for (var dir in policy) {

@@ -12,6 +12,7 @@ class GridWorld {
         this.world = this.initialize_world()
         this.is_done = false
     }
+
     initialize_world() {
         let world = Array(this.row).fill().map(() => {
             return Array(this.col).fill().map( () => { 
@@ -66,7 +67,7 @@ class GridWorld {
         return real_neighbors
     }
 
-    get_me() {
+    get_state() {
         let idx = [-1, -1]
         this.world.forEach( (row, row_i) => {
             row.forEach( (item, col_i) => {
@@ -95,15 +96,21 @@ class GridWorld {
             return idx
         }
     }
-    set_next_state(action) {
-        let curr_me = this.get_me()
-        let next_state = this.get_next_state(curr_me[0], curr_me[1], action)
 
-        this.is_done = this.is_end_state(next_state[0], next_state[1])
-        this.world[curr_me[0]][curr_me[1]].type = OBJ_TYPE.NONE
+    set_next_state(action) {
+        let curr_state = this.get_state()
+        let next_state = this.get_next_state(curr_state[0],
+                                             curr_state[1],
+                                             action)
+
+        this.is_done = this.is_end_state(next_state[0],
+                                         next_state[1])
+        /* translate state*/
+        this.world[curr_state[0]][curr_state[1]].type = OBJ_TYPE.NONE
         this.world[next_state[0]][next_state[1]].type = OBJ_TYPE.ME
 
         let reward = this.get_reward(next_state[0], next_state[1])
+
         return {reward: reward, done: this.is_done}
     }
 }

@@ -38,12 +38,13 @@ export default {
         line_width: 50,
         env_size:   [4, 4],
         env: new env.GridWorld(4, 4),
-        agent: new agent.PolicyIteration(4, 4),
+        agent: new agent.PolicyIteration(4, 4, 0.9),
         selected:  Array(4).fill().map( () => {
             return Array(4).fill().map( () => {
                 return {value: false}
             })
         }),
+        decay: 0.9,
         step_enabled: true
     }),
     components: {
