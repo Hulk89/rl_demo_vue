@@ -175,6 +175,8 @@ export default {
             this.env.initialize(this.params)
             this.agent.initialize(this.params)
             this.step_enabled=true
+
+            this.selected_idx = {row:-1, col: -1}
         },
         calculate_value: function(index) {
             if (!this.env.is_end_state(index.row, index.col))
