@@ -23,8 +23,14 @@
                     </v-flex>
                     <v-flex xs12>
                         <v-layout>
-                            <v-flex xs12>
-                                <v-text-field label="decay" v-model="decay"/>
+                            <v-flex xs4>
+                                <v-text-field label="decay" v-model.number="decay"/>
+                            </v-flex>
+                            <v-flex xs4>
+                                <v-text-field label="row" v-model.number="env_size.row"/>
+                            </v-flex>
+                            <v-flex xs4>
+                                <v-text-field label="col" v-model.number="env_size.col"/>
                             </v-flex>
                         </v-layout>
                     </v-flex>
@@ -81,11 +87,19 @@ export default {
         },
         decay: function () {
             this.agent.decay = this.decay
+        },
+        env_size: {  
+            handler: function () {
+                this.env.size = [this.env_size.row, this.env_size.col]
+                this.agent.size = [this.env_size.row, this.env_size.col]
+                this.selected = make_selected(this.env_size.row, this.env_size.col)
+                this.restart()
+            },
+            deep: true
         }
     },
     computed: {
         world: function() {
-            console.log("world changed")
             return Array(this.env_size.row).fill().map( (row, row_i) => {
                 return Array(this.env_size.col).fill().map( (item, col_i) => {
                     let decision = this.agent.decisions[row_i][col_i]
@@ -133,8 +147,6 @@ export default {
                 + this.line_width * col_idx + ")"
         },
         evaluate_step: function() {
-            console.log(this.agent)
-            console.log(this.env)
             this.agent.update_values(this.env)
         },
         improvement_step: function() {

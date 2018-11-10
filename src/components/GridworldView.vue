@@ -1,5 +1,5 @@
 <template>
-    <svg :width="world[0].length * line_width" :height="world.length * line_width" id="svg">
+    <svg :width="world[0].length * line_width" :height="world.length * line_width">
         <g v-for="(row, row_idx) in world" :transform="transform(0, row_idx)" :key="row_idx">
             <g v-for="(obj, col_idx) in row" :transform="transform(col_idx, 0)" :key="col_idx">
                 <PolicyRect :line_width="line_width"
@@ -22,10 +22,6 @@ export default {
     components: {
         /* eslint-disable vue/no-unused-components */
         PolicyRect
-    },
-    mounted: function () {
-        let svg = document.getElementById("svg")
-        let rect = svg.getBoundingClientRect()
     },
     methods: {
         transform: function (row_idx, col_idx) {
