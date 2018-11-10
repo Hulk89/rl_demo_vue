@@ -27,10 +27,10 @@
                                 <v-text-field label="decay" v-model.number="decay"/>
                             </v-flex>
                             <v-flex xs4>
-                                <v-text-field label="row" v-model.number="env_size.row"/>
+                                <v-select label="row" :items="rows" v-model.number="env_size.row"/>
                             </v-flex>
                             <v-flex xs4>
-                                <v-text-field label="col" v-model.number="env_size.col"/>
+                                <v-select label="col" :items="cols" v-model.number="env_size.col"/>
                             </v-flex>
                         </v-layout>
                     </v-flex>
@@ -67,6 +67,8 @@ export default {
         line_width: 50,
         env_size: {row:4, col:4},
         env: new GridWorld(4, 4),
+        rows: [3,4,5,6,7],
+        cols: [3,4,5,6,7],
         agent: new PolicyIteration(4, 4, 0.9),
         selected:  make_selected(4, 4),
         decay: 0.9,
