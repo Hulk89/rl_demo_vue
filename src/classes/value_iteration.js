@@ -1,5 +1,4 @@
 import PolicyIteration from './policy_iteration.js'
-import { DIRECTION } from '../utils/constants.js'
 
 export default class ValueIteration extends PolicyIteration {
     constructor(height, width, decay) {
@@ -11,7 +10,6 @@ export default class ValueIteration extends PolicyIteration {
             return 0
         }
         else{
-            let curr_decision = this.decisions[row_i][col_i]
             let neighbors = env.get_neighbors(row_i, col_i)
             let values = []
             neighbors.forEach((n) => {
