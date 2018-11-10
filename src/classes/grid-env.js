@@ -2,13 +2,18 @@ import { OBJ_TYPE, DIRECTION } from '../utils/constants.js'
 import random_util from '../utils/random.js'
 
 class GridWorld {
-    constructor(height, width) {
+    constructor(height, width, num_enemy=1) {
         this.row = height
         this.col = width
-        this.initialize()
+        this.num_enemy = num_enemy
+
+        this.world = this.initialize_world()
     }
 
-    initialize() {
+    initialize(params) {
+        this.row = params.row 
+        this.col = params.col
+        this.num_enemy = params.num_enemy
         this.world = this.initialize_world()
         this.is_done = false
     }
@@ -20,24 +25,21 @@ class GridWorld {
                         reward:  0}
             })
         })
-        let rand = random_util.getLocations(3, this.row, this.col)
-        let enemy = world[rand[0][0]][rand[0][1]]
-        let goal  = world[rand[1][0]][rand[1][1]]
-        let me    = world[rand[2][0]][rand[2][1]]
+        let rand = random_util.getLocations(this.num_enemy + 2, this.row, this.col)
+        Array(this.num_enemy).fill().map((item, i) => {
+            let enemy = world[rand[i][0]][rand[i][1]]
+            enemy.type   = OBJ_TYPE.ENEMY
+            enemy.reward = -10
+        })
+        let goal  = world[rand[this.num_enemy][0]][rand[this.num_enemy][1]]
+        let me    = world[rand[this.num_enemy+1][0]][rand[this.num_enemy+1][1]]
 
-        enemy.type   = OBJ_TYPE.ENEMY
-        enemy.reward = -10
         goal.type    = OBJ_TYPE.GOAL
         goal.reward  = 5
         me.type      = OBJ_TYPE.ME
         return world
     }
     
-    set size(size) {
-        this.row = size[0]
-        this.col = size[1]
-        this.initialize()
-    }
     
     get_reward(row, col) {
         return this.world[row][col].reward

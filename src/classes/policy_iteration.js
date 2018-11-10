@@ -4,10 +4,12 @@ export default class PolicyIteration {
         this.row = height
         this.col = width
         this.decay = decay
-        this.initialize()
+        this.decisions = this.initialize_decisions()
     }
 
-    initialize() {
+    initialize(params) {
+        this.row = params.row 
+        this.col = params.col
         this.decisions = this.initialize_decisions()
     }
 
@@ -20,13 +22,6 @@ export default class PolicyIteration {
             })
         })
         return decisions
-    }
-
-    set size(size) {
-        this.row = size[0]
-        this.col = size[1]
-
-        this.initialize()
     }
 
     calculate_new_value(row_i, col_i, env) {

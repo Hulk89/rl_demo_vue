@@ -23,14 +23,18 @@
                     </v-flex>
                     <v-flex xs12>
                         <v-layout>
-                            <v-flex xs4>
+                            <v-flex xs3>
                                 <v-text-field label="decay" v-model.number="decay"/>
                             </v-flex>
-                            <v-flex xs4>
-                                <v-select label="row" :items="rows" v-model.number="env_size.row"/>
+                            <v-flex xs3>
+                                <v-select label="row" :items="rows" v-model.number="params.row"/>
                             </v-flex>
-                            <v-flex xs4>
-                                <v-select label="col" :items="cols" v-model.number="env_size.col"/>
+                            <v-flex xs3>
+                                <v-select label="col" :items="cols" v-model.number="params.col"/>
+                            </v-flex>
+                            <v-flex xs3>
+                                <v-select label="num_obstacle" :items="enemies"
+                                    v-model.number="params.num_enemy"/>
                             </v-flex>
                         </v-layout>
                     </v-flex>
@@ -65,7 +69,7 @@ export default {
     data: () => ({
         svg_size:   [0, 0],
         line_width: 50,
-        env_size: {row:4, col:4},
+        params: {row:4, col:4, num_enemy: 1},
         env: new GridWorld(4, 4),
         rows: [3,4,5,6,7],
         cols: [3,4,5,6,7],
@@ -81,7 +85,7 @@ export default {
     },
     watch: {
         selected_idx: function () {
-            this.selected = make_selected(this.env_size.row, this.env_size.col)
+            this.selected = make_selected(this.params.row, this.params.col)
             let row_i = this.selected_idx.row
             let col_i = this.selected_idx.col
             if (row_i != -1)
@@ -90,20 +94,23 @@ export default {
         decay: function () {
             this.agent.decay = this.decay
         },
-        env_size: {  
+        params: {  
             handler: function () {
-                this.env.size = [this.env_size.row, this.env_size.col]
-                this.agent.size = [this.env_size.row, this.env_size.col]
-                this.selected = make_selected(this.env_size.row, this.env_size.col)
+                this.env.initialize(this.params)
+                this.agent.initialize(this.params)
+                this.selected = make_selected(this.params.row, this.params.col)
                 this.restart()
             },
             deep: true
         }
     },
     computed: {
+        enemies: function() {
+            return Array(Math.min(this.params.row, this.params.col)-1).fill().map((_, i) => i+1)
+        },
         world: function() {
-            return Array(this.env_size.row).fill().map( (row, row_i) => {
-                return Array(this.env_size.col).fill().map( (item, col_i) => {
+            return Array(this.params.row).fill().map( (row, row_i) => {
+                return Array(this.params.col).fill().map( (item, col_i) => {
                     let decision = this.agent.decisions[row_i][col_i]
                     let env = this.env.world[row_i][col_i]
                     let selected = this.selected[row_i][col_i]
@@ -165,8 +172,8 @@ export default {
             }                
         },
         restart: function() {
-            this.env.initialize()
-            this.agent.initialize()
+            this.env.initialize(this.params)
+            this.agent.initialize(this.params)
             this.step_enabled=true
         },
         calculate_value: function(index) {
