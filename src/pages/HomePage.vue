@@ -9,7 +9,7 @@
 ## 진도
 
 - [x] Policy iteration
-- [ ] Value iteration
+- [x] Value iteration
 - [ ] Monte-carlo prediction
 - [ ] Temporal difference
 - [ ] Sarsa

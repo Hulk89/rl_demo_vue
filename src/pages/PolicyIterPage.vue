@@ -9,17 +9,19 @@
 ---
 * **Policy 초기화**
 * **Policy evaluation**
-    * review 
+    * Review 
         * Bellman Expectation Equation
           * $v_\pi(s) =  {\Sigma}_{a \in A} \pi(a \vert s)(R_{t+1} + \gamma v_\pi(s'))$
     * 위 수식을 dynamic programming을 통해 구해본다
         * $v_{k+1}(s) = {\Sigma}_{a \in A} \pi(a \vert s)(R_{t+1} + \gamma v_k(s'))$
 * **Policy improvement**
-    * 여러가지 가능하나 Greedy Improvement를 소개한다.
-    * review
+    * Review
         * q-func: $q_\pi(s,a) = E_\pi[R_{t+1} + \gamma v_\pi(S_{t+1}) \vert S_t=s, A_t=a]$
     * $q_\pi(s,a) = R_{s}^a + \gamma v_\pi(s')$ 로 고침
-    * 위 식을 최대화하는 action a를 반환하는 정책
+    * Greedy Improvement
+        * 위 식을 최대화하는 action a를 반환
+    * Softmax Improvement 
+        * 위 식을 softmax에 넣어서 action a의 확률을 만듬
 
 
 ## Value iteration과의 차이점

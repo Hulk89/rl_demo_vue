@@ -2,7 +2,7 @@
     <v-container fill-height>
         <v-layout column>
             <v-flex xs1 text-xs-center>
-                <h1>Policy Iteration</h1>
+                <h1>Value Iteration Demo</h1>
             </v-flex>
             <v-flex xs8 text-xs-center>
                 <GridworldView 
@@ -22,7 +22,7 @@
                         </h3>
                     </v-flex>
                     <v-flex xs12>
-                        <v-layout wrap>
+                        <v-layout>
                             <v-flex xs3>
                                 <v-text-field label="decay" v-model.number="decay"/>
                             </v-flex>
@@ -36,27 +36,17 @@
                                 <v-select label="num_obstacle" :items="enemies"
                                     v-model.number="params.num_enemy"/>
                             </v-flex>
-                            <v-flex xs12>
-                                <v-radio-group v-model="greedy" :column="false">
-                                    <v-radio label="greedy improvement" :value="true"/>
-                                    <v-radio label="softmax improvement" :value="false"/>
-                                </v-radio-group>
-                            </v-flex>
                         </v-layout>
                     </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs4>
                         <v-btn @click="evaluate_step"
                             :disabled="!step_enabled">next eval</v-btn>
                     </v-flex>
-                    <v-flex xs3>
-                        <v-btn @click="improvement_step"
-                            :disabled="!step_enabled">next improve</v-btn>
-                    </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs4>
                         <v-btn @click="step"
                             :disabled="!step_enabled">step</v-btn>
                     </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs4>
                         <v-btn @click="restart">restart</v-btn>
                     </v-flex>
                 </v-layout>
@@ -69,7 +59,7 @@
 import GridworldView from './GridworldView.vue'
 import { dir_to_str } from '../utils/constants.js'
 import GridWorld from '../classes/grid-env.js' 
-import PolicyIteration from '../classes/policy_iteration.js'
+import ValueIteration from '../classes/value_iteration.js'
 
 export default {
     data: () => ({
@@ -79,10 +69,9 @@ export default {
         env: new GridWorld(4, 4),
         rows: [3,4,5,6,7],
         cols: [3,4,5,6,7],
-        agent: new PolicyIteration(4, 4, 0.9, true),
+        agent: new ValueIteration(4, 4, 0.9),
         selected:  make_selected(4, 4),
         decay: 0.9,
-        greedy: true,
         step_enabled: true,
         selected_idx: {row: -1, col: -1}
     }),
@@ -100,9 +89,6 @@ export default {
         },
         decay: function () {
             this.agent.decay = this.decay
-        },
-        greedy: function () {
-            this.agent.greedy = this.greedy
         },
         params: {  
             handler: function () {
@@ -144,20 +130,22 @@ export default {
         },
         value: function() {
             /* value 계산 식과 실제 value function 값을 return*/
-            let values = []
-            let sum = 0
+            let value_string = ""
+            let next_value = 0
             let row_i = this.selected_idx.row
             let col_i = this.selected_idx.col
             this.neighbors.forEach( (n) => {
                 let reward = this.env.get_reward(n.idx[0], n.idx[1])
                 let val = this.agent.get_value(n.idx[0], n.idx[1])
                 let prob = this.agent.decisions[row_i][col_i].policy[n.dir]
-                values.push("{"+ dir_to_str(n.dir) + "}" + prob.toFixed(2) + '*' + '(' + reward.toFixed(2) 
-                                             + ' + ' + this.decay + ' * ' + parseFloat(val).toFixed(2) + ')')
+                if (prob > 0) {
+                    value_string = "{"+ dir_to_str(n.dir) + "}" +  '(' + reward.toFixed(2) 
+                                      + ' + ' + this.decay + ' * ' + parseFloat(val).toFixed(2) + ')'
 
-                sum += prob * (reward + this.decay * val)
+                    next_value = (reward + this.decay * val)
+                }
             })
-            return {eq: values.join(' + '), total: sum.toFixed(2)}
+            return {eq: value_string, total: next_value.toFixed(2)}
         }
     },
     methods: {
@@ -167,9 +155,6 @@ export default {
         },
         evaluate_step: function() {
             this.agent.update_values(this.env)
-        },
-        improvement_step: function() {
-            this.agent.improve_policy(this.env)
         },
         step: function() {
             let action = this.agent.get_action(this.env)

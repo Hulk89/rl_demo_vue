@@ -1,9 +1,10 @@
 import { DIRECTION } from '../utils/constants.js'
 export default class PolicyIteration {
-    constructor(height, width, decay) {
+    constructor(height, width, decay, greedy=true) {
         this.row = height
         this.col = width
         this.decay = decay
+        this.greedy = greedy
         this.decisions = this.initialize_decisions()
     }
 
@@ -86,29 +87,59 @@ export default class PolicyIteration {
     }
 
     improve_policy(env) {
-        this.decisions.forEach( (row, row_i) => {
-            row.forEach( (curr_decision, col_i) => {
-                let neighbors = env.get_neighbors(row_i, col_i)
+        if (this.greedy) {
+            this.decisions.forEach( (row, row_i) => {
+                row.forEach( (curr_decision, col_i) => {
+                    let neighbors = env.get_neighbors(row_i, col_i)
+                    
+                    let max_return = {val: -1000, dirs:[DIRECTION.UP]}
+                    neighbors.forEach((n) => {
+                        let n_state_reward = env.get_reward(n.idx[0], n.idx[1])
+                        let n_state_value = this.get_value(n.idx[0], n.idx[1])
+                        let _return = (n_state_reward + this.decay * n_state_value)
 
-                let max_return = {val: -1000, dirs:[DIRECTION.UP]}
-                neighbors.forEach((n) => {
-                    let n_state_reward = env.get_reward(n.idx[0], n.idx[1])
-                    let n_state_value = this.get_value(n.idx[0], n.idx[1])
-                    let _return = (n_state_reward + this.decay * n_state_value)
+                        if (_return > max_return.val) {
+                            max_return = {val: _return, dirs: [n.dir]}
+                        }
+                        else if (_return == max_return.val) {
+                            max_return.dirs.push(n.dir)
+                        }
+                    })
 
-                    if (_return > max_return.val) {
-                        max_return = {val: _return, dirs: [n.dir]}
-                    }
-                    else if (_return == max_return.val) {
-                        max_return.dirs.push(n.dir)
-                    }
-                })
-
-                curr_decision.policy = [0, 0, 0, 0]
-                max_return.dirs.forEach( (dir) => {
-                    curr_decision.policy[dir] = 1/max_return.dirs.length
+                    curr_decision.policy = [0, 0, 0, 0]
+                    max_return.dirs.forEach( (dir) => {
+                        curr_decision.policy[dir] = 1/max_return.dirs.length
+                    })
                 })
             })
-        })
+        }
+        else {
+            this.decisions.forEach( (row, row_i) => {
+                row.forEach( (curr_decision, col_i) => {
+                    let neighbors = env.get_neighbors(row_i, col_i)
+                    
+                    let returns = []
+                    neighbors.forEach((n) => {
+                        let n_state_reward = env.get_reward(n.idx[0], n.idx[1])
+                        let n_state_value = this.get_value(n.idx[0], n.idx[1])
+                        let _return = (n_state_reward + this.decay * n_state_value)
+
+                        returns.push({val: _return, dir: n.dir})
+                    })
+
+                    returns = softmax(returns)
+
+                    curr_decision.policy = [0, 0, 0, 0]
+                    returns.forEach( (item) => {
+                        curr_decision.policy[item.dir] = item.val
+                    })
+                })
+            })
+        }
     }
+}
+
+function softmax(arr) {
+    let denom = arr.reduce((acc, cur) => acc + Math.exp(cur.val), 0)
+    return arr.map( (item) => ({val: Math.exp(item.val)/denom, dir: item.dir}))
 }
