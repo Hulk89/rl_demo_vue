@@ -4,20 +4,18 @@
             <v-flex xs1 text-xs-center>
                 <h1>Home</h1>
             </v-flex>
-            <v-flex xs8 text-xs-center>
-            </v-flex>
-            <v-flex xs2 text-xs-center>
-                <BasePage/>
+            <v-flex xs8>
+                <HomePage/>
             </v-flex>
         </v-layout>
     </v-container>
 </template>
 
 <script>
-import BasePage from '../pages/BasePage.vue'
+import HomePage from '../pages/HomePage.vue'
 export default {
     components: {
-        BasePage
+        HomePage
     }
 }
 </script>
