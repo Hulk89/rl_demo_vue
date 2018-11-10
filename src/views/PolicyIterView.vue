@@ -1,13 +1,18 @@
 <template>
-  <PolicyIter />
+    <div>
+        <demo />
+        <page />
+    </div>
 </template>
 
 <script>
-  import PolicyIter from '../components/PolicyIter.vue'
+import PolicyIter from '../components/PolicyIter.vue'
+import PolicyIterPage from '../pages/PolicyIterPage.vue'
 
-  export default {
+export default {
     components: {
-      PolicyIter
+        'demo': PolicyIter,
+        'page': PolicyIterPage
     }
-  }
+}
 </script>

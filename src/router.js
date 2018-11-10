@@ -1,17 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import PolicyIterView from './views/PolicyIterView.vue'
 import Home from './views/Home.vue'
-
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'Home',
       component: Home
+    },
+    {
+      path: '/dp_pi',
+      name: 'policy iteration',
+      component: PolicyIterView
     },
     {
       path: '/about',

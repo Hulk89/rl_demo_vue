@@ -9,19 +9,15 @@
     </v-toolbar>
 
     <v-content>
-      <PolicyIterView/>
+        <router-view/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import PolicyIterView from './views/PolicyIterView.vue'
 
 export default {
   name: 'App',
-  components: {
-    PolicyIterView
-  },
   data () {
     return {
       //
