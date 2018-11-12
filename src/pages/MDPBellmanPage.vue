@@ -4,8 +4,6 @@
             <v-flex xs12>
                 <div class="page">
                     <vue-markdown>
-# 2장 - 강화학습 기초 1: MDP와 벨만 방정식
-
 ## MDP
 * 순차적 행동 결정 문제를 수학적으로 정의
 * 다음 6가지로 구성
@@ -45,12 +43,20 @@ R은 각 state로 갈 때 받을 수 있는 reward를 말한다.
                         </v-flex>
                     </v-layout>
                     <vue-markdown>
-
 ### 학습방법
 * agent는 환경으로부터, 상태($s_t$)와 보상($r_t$)를 받고, 자신의 policy($\pi$)에 따라 행동($a_t$)을 함
 * 환경은 행동($a_t$)에 대해 새로운 상태와 보상을 주고, agent는 보상을 최대화하는 방향으로 학습
                     </vue-markdown>
-
+                    <v-layout wrap text-xs-center>
+                        <v-flex xs12>
+                            <img src="../assets/images/env_agent_communication.jpg"/>
+                        </v-flex>
+                        <v-flex xs12>
+                            <vue-markdown>
+[사진 출처](http://dhznsdl.tistory.com/14)
+                            </vue-markdown>
+                        </v-flex>
+                    </v-layout> 
 
 
                     <vue-markdown>
@@ -114,7 +120,7 @@ R은 각 state로 갈 때 받을 수 있는 reward를 말한다.
 <script>
 import VueMarkdown from 'vue-markdown'  
 import GridworldView from '../components/GridworldView.vue'
-import {OBJ_TYPE, DIRECTION}from '../utils/constants.js'
+import {OBJ_TYPE}from '../utils/constants.js'
 export default {
     data: () => ({
         world: [[{type:OBJ_TYPE.NONE, reward: 0, policy: [0,0,0,0], selected:false},
