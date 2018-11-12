@@ -49,7 +49,7 @@ R은 각 state로 갈 때 받을 수 있는 reward를 말한다.
                     </vue-markdown>
                     <v-layout wrap text-xs-center>
                         <v-flex xs12>
-                            <img src="../assets/images/env_agent_communication.jpg"/>
+                            <v-img :src="require('../assets/images/env_agent_communication.jpg')"/>
                         </v-flex>
                         <v-flex xs12>
                             <vue-markdown>

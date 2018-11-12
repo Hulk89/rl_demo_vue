@@ -36,10 +36,12 @@
         <v-toolbar app>
             <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
             <v-spacer></v-spacer>
-            <v-toolbar-title class="headline text-uppercase">
-                <span>Hulk's</span>&nbsp;
-                <span class="font-weight-light">RL Demo</span>
-            </v-toolbar-title>
+            <router-link to="/" tag="button">
+                <v-toolbar-title class="headline text-uppercase">
+                    <span>Hulk's</span>&nbsp;
+                    <span class="font-weight-light">RL Demo</span>
+                </v-toolbar-title>
+            </router-link>
         </v-toolbar>
 
         <v-content>
@@ -56,6 +58,6 @@ export default {
         drawer: false,
         routes: routes
     
-    })
+    }),
 }
 </script>
