@@ -5,6 +5,7 @@
                 <PolicyRect :line_width="line_width"
                             :obj_type="obj.type"
                             :policy="obj.policy"
+                            :ignore_value="ignore_value"
                             :reward="obj.reward"
                             :value="obj.value"
                             :selected="obj.selected"
@@ -18,7 +19,10 @@
 import PolicyRect from './PolicyRect'
 
 export default {
-    props: ['world', 'line_width'],
+    props: {world: Array, 
+            line_width: Number,
+            ignore_value: {type: Boolean, default: false}
+            },
     components: {
         /* eslint-disable vue/no-unused-components */
         PolicyRect

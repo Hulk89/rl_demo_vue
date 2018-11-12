@@ -5,7 +5,9 @@
               :class="obj_class"
               />
         <text :x="3" 
-              :y="15" fill="black">v: {{ value }} </text>
+              :y="15"
+              v-if="!ignore_value"
+              fill="black">v: {{ value }} </text>
         <text :x="3" 
               :y="line_width-5" fill="black">R: {{ reward }} </text>
         <line :x1="line_width/2"
@@ -46,12 +48,13 @@
 <script>
 import { OBJ_TYPE, DIRECTION } from '../utils/constants.js'
 export default {
-    props: ['line_width', 
-            'obj_type', 
-            'policy', 
-            'reward',
-            'value',
-            'selected'],
+    props: {line_width: Number, 
+            obj_type: Number, 
+            policy: Array, 
+            reward: Number,
+            value: Number,
+            selected: Boolean,
+            ignore_value: {type: Boolean, default: false}},
     computed: {
         obj_class: function () {
             let obj_classes = ['box']
