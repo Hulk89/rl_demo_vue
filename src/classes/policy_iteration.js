@@ -38,7 +38,7 @@ export default class PolicyIteration {
                 let n_state_value = this.get_value(n.idx[0], n.idx[1])
                 value += curr_decision.policy[n.dir] * (n_state_reward + this.decay * n_state_value)
             })
-            return value.toFixed(2)
+            return parseFloat(value.toFixed(2))
         }
     }
 
