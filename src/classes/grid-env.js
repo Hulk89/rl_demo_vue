@@ -6,6 +6,9 @@ class GridWorld {
         this.row = height
         this.col = width
         this.num_enemy = num_enemy
+        this.goal = null
+        this.enemies = null
+        this.me = null
 
         this.world = this.initialize_world()
     }
@@ -37,6 +40,12 @@ class GridWorld {
         goal.type    = OBJ_TYPE.GOAL
         goal.reward  = 5
         me.type      = OBJ_TYPE.ME
+
+        this.enemies = Array(this.num_enemy).fill().map( (_, i) => {
+            return rand[i]
+        })
+        this.goal = rand[this.num_enemy]
+        this.me = rand[this.num_enemy+1]
         return world
     }
     
@@ -120,6 +129,22 @@ class GridWorld {
         let reward = this.get_reward(next_state[0], next_state[1])
 
         return {reward: reward, done: this.is_done}
+    }
+
+    revert_env_info() {
+        let state = this.get_state()
+
+        this.world[this.me[0]][this.me[1]].type = OBJ_TYPE.ME
+        if (this.goal[0] == state[0] && this.goal[1] == state[1]) {
+            this.world[state[0]][state[1]].type = OBJ_TYPE.GOAL
+            return 
+        }
+        for (let i = 0 ; i < this.enemies.length ; i++) {
+            if (this.enemies[i][0] == state[0] && this.enemies[i][1] == state[1]) {
+                this.world[state[0]][state[1]].type = OBJ_TYPE.ENEMY
+                return
+            }
+        }
     }
 }
 
