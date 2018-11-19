@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { OBJ_TYPE, DIRECTION } from '../utils/constants.js'
+import { OBJ_TYPE } from '../utils/constants.js'
 export default {
     props: {radius: Number, 
             obj_type: Number, 

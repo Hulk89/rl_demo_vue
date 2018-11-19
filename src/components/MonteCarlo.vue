@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { dir_to_str, OBJ_TYPE } from '../utils/constants.js'
+import { OBJ_TYPE } from '../utils/constants.js'
 import StateTreeView from './StateTreeView.vue'
 
 export default {

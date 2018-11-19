@@ -34,12 +34,12 @@ export const routes = [
             path: '/prediction_control',
             name: 'Prediction & Control',
             component: PredictionControlView,
-            icon: 'grid_on'
+            icon: 'android'
         },
         {
             path: '/mc',
             name: 'Monte Carlo',
             component: MonteCarloView,
-            icon: 'grid_on'
+            icon: 'remove_red_eye'
         },
     ]
