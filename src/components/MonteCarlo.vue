@@ -5,31 +5,14 @@
                 <h1>Monte Carlo Demo</h1>
             </v-flex>
             <v-flex xs8 text-xs-center>
-                <GridworldView 
-                    :world="world"
-                    :line_width="line_width"
-                    @calculate-value="calculate_value"
-                    />
+                <StateTreeView
+                    :nodes="nodes"
+                    :radius="radius"
+                    :ignore_value="false"
+                    @clicked-node="clicked_node"/>
             </v-flex>
             <v-flex xs2 text-xs-center>
                 <v-layout wrap>
-                    <v-flex xs12>
-                        <v-layout wrap>
-                            <v-flex xs3>
-                                <v-text-field label="decay" v-model.number="decay"/>
-                            </v-flex>
-                            <v-flex xs3>
-                                <v-select label="row" :items="rows" v-model.number="params.row"/>
-                            </v-flex>
-                            <v-flex xs3>
-                                <v-select label="col" :items="cols" v-model.number="params.col"/>
-                            </v-flex>
-                            <v-flex xs3>
-                                <v-select label="num_obstacle" :items="enemies"
-                                    v-model.number="params.num_enemy"/>
-                            </v-flex>
-                        </v-layout>
-                    </v-flex>
                     <v-flex xs4>
                         <v-btn @click="step"
                             :disabled="!step_enabled">step</v-btn>
@@ -47,123 +30,93 @@
 </template>
 
 <script>
-import GridworldView from './GridworldView.vue'
-import { dir_to_str } from '../utils/constants.js'
-import GridWorld from '../classes/grid-env.js' 
-import PolicyIteration from '../classes/policy_iteration.js'
+import { dir_to_str, OBJ_TYPE } from '../utils/constants.js'
+import StateTreeView from './StateTreeView.vue'
 
 export default {
     data: () => ({
-        svg_size:   [0, 0],
-        line_width: 50,
-        params: {row:3, col:3, num_enemy: 1},
-        env: new GridWorld(3, 3),
-        rows: [3,4],
-        cols: [3,4],
-        agent: new PolicyIteration(3, 3, 0.9, true),
+        radius: 25,
         decay: 0.9,
+        path: [{state: 0, reward: 0}],
         step_enabled: true,
-        selected: make_selected(3, 3),
-        path: []
+        nodes: [
+                {selected: true, pos:[1,0], value:0, reward: 0, type: OBJ_TYPE.NONE, action: [1, 2, 3]},
+                {selected: false, pos:[0,1], value:0, reward: 0, type: OBJ_TYPE.NONE, action: [4, 5]},
+                {selected: false, pos:[1,1], value:0, reward: 0, type: OBJ_TYPE.NONE, action: [5]},
+                {selected: false, pos:[2,1], value:0, reward: 0, type: OBJ_TYPE.NONE, action: [4, 6]},
+                {selected: false, pos:[0,2], value:0, reward: -10, type: OBJ_TYPE.ENEMY, action: []},
+                {selected: false, pos:[1,2], value:0, reward: 5, type: OBJ_TYPE.GOAL, action:[]},
+                {selected: false, pos:[2,2], value:0, reward: -5, type: OBJ_TYPE.ENEMY, action: []},
+            ],
+        curr_pos: 0
+
     }),
     components: {
         /* eslint-disable vue/no-unused-components */
-        GridworldView
-    },
-    watch: {
-        decay: function () {
-            this.agent.decay = this.decay
-        },
-        params: {  
-            handler: function () {
-                this.restart()
-            },
-            deep: true
-        }
+        StateTreeView
     },
     mounted() {
-        this.reset_path()
+        this.initialize()
     },
-    computed: {
-        enemies: function() {
-            return Array(Math.min(this.params.row, this.params.col)-1).fill().map((_, i) => i+1)
+    watch: {
+        curr_pos: function (val, oldVal) {
+            this.nodes[oldVal].selected = false
+            this.nodes[val].selected = true
         },
-        world: function() {
-            return Array(this.params.row).fill().map( (row, row_i) => {
-                return Array(this.params.col).fill().map( (item, col_i) => {
-                    let decision = this.agent.decisions[row_i][col_i]
-                    let env = this.env.world[row_i][col_i]
-                    return {value:    decision.value,
-                            policy:   decision.policy,
-                            reward:   env.reward,
-                            type:     env.type,
-                            selected: false}
-                })
-            })
-        },
-        world_transform: function() {
-            let start_row = this.svg_size[0]/2 - this.world.length/2 * this.line_width
-            let start_col = this.svg_size[1]/2 - this.world[0].length/2 * this.line_width
-            return "translate(" + start_row + ', ' + start_col + ")" 
-        }
     },
     methods: {
-        transform: function (row_idx, col_idx) {
-            return "translate(" + this.line_width * row_idx + ', '
-                + this.line_width * col_idx + ")"
+        initialize: function() {
+            this.path = [{state: 0, reward: 0}]
+            this.nodes.forEach( (item) => {
+                item.value = 0
+            })
+            this.curr_pos = 0
+            this.step_enabled = true
         },
         step: function() {
-            let action = this.agent.get_action(this.env)
-            let result = this.env.set_next_state(action)
+            let actions = this.nodes[this.curr_pos].action
+            let action = actions[Math.floor(Math.random() * actions.length)]
             
-            console.log(result)
+            let reward = this.nodes[action].reward
+            let done = (this.nodes[action].action.length == 0)
 
-            this.path.push( {state:  this.env.get_state(), 
-                             reward: result.reward})
-            if (result.done) {
-                /* TODO: value 계산 */
+
+            this.path.push( {state:  action,
+                             reward: reward})
+            this.curr_pos = action
+
+            if (done) {
                 this.step_enabled = false
                 let value = 0.0
                 this.path.reverse().forEach( (item, i) => { 
                     if ( i == 0 ) {
+                        value = item.reward
                     }
                     else {
-                        let row = item.state[0]
-                        let col = item.state[1]
-                        this.agent.decisions[row][col].value = item.reward + this.decay * value
                         value = item.reward + this.decay * value
-                        console.log(value)
+                        let prev_val = this.nodes[item.state].value
+                        this.nodes[item.state].value = parseFloat((0.9 * prev_val + 0.1 * value).toFixed(2))
+                        value = parseFloat(value.toFixed(2))
                     }
                 })
-                /* selected 보여주기*/
             }
         },
         next_episode: function() {
-            this.env.revert_env_info()
             this.step_enabled = true
             this.reset_path()
-            this.selected = make_selected(this.params.row, this.params.col)
         },
         restart: function() {
-            this.env.initialize(this.params)
-            this.agent.initialize(this.params)
+            this.initialize()
             
         },
-        calculate_value: function(index) {
-            console.log("nothing to do")
+        clicked_node: function(index) {
+            console.log(index)
         },
         reset_path: function() {
-            this.path.splice(this.path.length, 0, {state: this.env.get_state(), reward: 0})
+            this.path = [{state: 0, reward: 0}]
+            this.curr_pos = 0
         }
     }
-}
-
-function make_selected(row, col) {
-    return Array(row).fill().map( () => {
-            return Array(col).fill().map( () => {
-                return false
-            })
-        })
 }
 
 </script>
