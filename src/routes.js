@@ -2,6 +2,7 @@ import MDPBellmanView from './views/MDPBellmanView.vue'
 import PolicyIterView from './views/PolicyIterView.vue'
 import ValueIterView from './views/ValueIterView.vue'
 import Home from './views/Home.vue'
+import PredictionControlView from './views/PredictionControlView.vue'
 import MonteCarloView from './views/MonteCarloView.vue'
 
 export const routes = [
@@ -27,6 +28,12 @@ export const routes = [
             path: '/dp_vi',
             name: 'Value Iteration',
             component: ValueIterView,
+            icon: 'grid_on'
+        },
+        {
+            path: '/prediction_control',
+            name: 'Prediction & Control',
+            component: PredictionControlView,
             icon: 'grid_on'
         },
         {

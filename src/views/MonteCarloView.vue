@@ -7,12 +7,12 @@
 
 <script>
 import MonteCarlo from '../components/MonteCarlo.vue'
-import PolicyIterPage from '../pages/PolicyIterPage.vue'
+import MonteCarloPage from '../pages/MonteCarloPage.vue'
 
 export default {
     components: {
         'demo': MonteCarlo,
-        'page': PolicyIterPage
+        'page': MonteCarloPage
     }
 }
 </script>
