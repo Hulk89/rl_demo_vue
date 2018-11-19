@@ -10,7 +10,7 @@
 
 - [x] Policy iteration
 - [x] Value iteration
-- [ ] Monte-carlo prediction
+- [x] Monte-carlo prediction
 - [ ] Temporal difference
 - [ ] Sarsa
 - [ ] Q-learning
