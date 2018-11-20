@@ -2,7 +2,7 @@
     <v-container fill-height>
         <v-layout column>
             <v-flex xs1 text-xs-center>
-                <h1>Monte Carlo Demo</h1>
+                <h1>Temporal Difference Demo</h1>
             </v-flex>
             <v-flex xs8 text-xs-center>
                 <StateTreeView
@@ -42,7 +42,6 @@ export default {
     data: () => ({
         radius: 25,
         decay: 0.9,
-        path: [],
         nodes: [
                 {selected: true, pos:[1,0], value:0, reward: 0, type: OBJ_TYPE.NONE, action: [1, 2, 3]},
                 {selected: false, pos:[0,1], value:0, reward: 0, type: OBJ_TYPE.NONE, action: [4, 5]},
@@ -75,7 +74,6 @@ export default {
     },
     methods: {
         initialize: function() {
-            this.path = []
             this.nodes.forEach( (item) => {
                 item.value = 0
             })
@@ -96,30 +94,22 @@ export default {
             clearTimeout(this.timerId)
         },
         step: function() {
-            let actions = this.nodes[this.curr_pos].action
+            let curr_node = this.nodes[this.curr_pos]
+            let actions = curr_node.action
+
             if (actions.length == 0) {
-                this.reset_path()
+                this.reset_pos()
             }
             else {
                 let action = actions[Math.floor(Math.random() * actions.length)]
-                let reward = this.nodes[action].reward
-                let done = (this.nodes[action].action.length == 0)
+                let next_node = this.nodes[action]
+                let reward = next_node.reward
 
-                this.path.push( {state:  this.curr_pos,
-                                reward: reward})
+                let value = reward + this.decay * next_node.value
+                curr_node.value = parseFloat((0.9 * curr_node.value + 0.1 * value).toFixed(2))
 
+                                
                 this.curr_pos = action
-
-                if (done) {
-                    this.step_enabled = false
-                    let value = 0.0
-                    this.path.reverse().forEach( (item, i) => { 
-                        value = item.reward + this.decay * value
-                        let prev_val = this.nodes[item.state].value
-                        this.nodes[item.state].value = parseFloat((0.9 * prev_val + 0.1 * value).toFixed(2))
-                        value = parseFloat(value.toFixed(2))
-                    })
-                }
             }
         },
         reset: function() {
@@ -128,8 +118,7 @@ export default {
         clicked_node: function(index) {
             console.log(index)
         },
-        reset_path: function() {
-            this.path = []
+        reset_pos: function() {
             this.curr_pos = 0
         }
     }

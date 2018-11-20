@@ -2,7 +2,7 @@
     <v-container fill-height>
         <v-layout column>
             <v-flex xs1 text-xs-center>
-                <h1>Policy Iteration</h1>
+                <h1>Policy Iteration Demo</h1>
             </v-flex>
             <v-flex xs8 text-xs-center>
                 <GridworldView 

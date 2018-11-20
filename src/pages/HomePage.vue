@@ -11,7 +11,7 @@
 - [x] Policy iteration
 - [x] Value iteration
 - [x] Monte-carlo prediction
-- [ ] Temporal difference
+- [x] Temporal difference
 - [ ] Sarsa
 - [ ] Q-learning
 - [ ] 추후 공개..

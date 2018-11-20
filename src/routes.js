@@ -3,7 +3,7 @@ import PolicyIterView from './views/PolicyIterView.vue'
 import ValueIterView from './views/ValueIterView.vue'
 import Home from './views/Home.vue'
 import PredictionControlView from './views/PredictionControlView.vue'
-import MonteCarloView from './views/MonteCarloView.vue'
+import PredictionView from './views/PredictionView.vue'
 
 export const routes = [
         {
@@ -37,9 +37,9 @@ export const routes = [
             icon: 'android'
         },
         {
-            path: '/mc',
-            name: 'Monte Carlo',
-            component: MonteCarloView,
+            path: '/prediction',
+            name: 'Prediction',
+            component: PredictionView,
             icon: 'remove_red_eye'
         },
     ]
