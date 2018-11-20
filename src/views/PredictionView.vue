@@ -2,10 +2,10 @@
     <div>
         <v-container>
             <v-layout wrap>
-                <v-flex xs6>
+                <v-flex xs12 md6>
                     <mcdemo />
                 </v-flex>
-                <v-flex xs6>
+                <v-flex xs12 md6>
                     <tddemo />
                 </v-flex>
             </v-layout>

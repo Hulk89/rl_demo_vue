@@ -23,16 +23,16 @@
                     </v-flex>
                     <v-flex xs12>
                         <v-layout wrap>
-                            <v-flex xs3>
+                            <v-flex xs6 md3>
                                 <v-text-field label="decay" v-model.number="decay"/>
                             </v-flex>
-                            <v-flex xs3>
+                            <v-flex xs6 md3>
                                 <v-select label="row" :items="rows" v-model.number="params.row"/>
                             </v-flex>
-                            <v-flex xs3>
+                            <v-flex xs6 md3>
                                 <v-select label="col" :items="cols" v-model.number="params.col"/>
                             </v-flex>
-                            <v-flex xs3>
+                            <v-flex xs6 md3>
                                 <v-select label="num_obstacle" :items="enemies"
                                     v-model.number="params.num_enemy"/>
                             </v-flex>
@@ -44,19 +44,19 @@
                             </v-flex>
                         </v-layout>
                     </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs6 md3>
                         <v-btn @click="evaluate_step"
                             :disabled="!step_enabled">next eval</v-btn>
                     </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs6 md3>
                         <v-btn @click="improvement_step"
                             :disabled="!step_enabled">next improve</v-btn>
                     </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs6 md3>
                         <v-btn @click="step"
                             :disabled="!step_enabled">step</v-btn>
                     </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs6 md3>
                         <v-btn @click="restart">restart</v-btn>
                     </v-flex>
                 </v-layout>
